@@ -35,7 +35,7 @@ A web map or notebook, a clean README, and a short write-up with an honest limit
 Output: public repo and a LinkedIn-ready summary.
 
 ## Risks to watch
-- Network constraint data may not be public, which weakens the battery score.
+- Network constraint data may not be public, which weakens the battery score. (Resolved: public but coarse, see STAGE3_SCORE.md.)
 - Imagery licensing or resolution may block detection.
 - Scope creep from running two layers at once. Stage 4 is the first place to cut if time is tight.
 - Overclaiming on prices. See decision D3.
@@ -45,3 +45,4 @@ Output: public repo and a LinkedIn-ready summary.
 - Stage 1: anchor figure and method in STAGE1_WASTE.md (D11).
 - Stage 2: joined Perth postcode layer and first choropleth, `src/build_baseline.py` (D12, D13). Checked in QGIS.
 - Stage 3: opportunity score, sensitivity check and iNOM validation in STAGE3_SCORE.md (D14).
+- Stage 6: README, web map (`src/export_web_map.py`, served from `docs/map/` by GitHub Pages) and WRITEUP.md with LinkedIn summary.
