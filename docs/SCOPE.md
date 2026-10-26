@@ -1,6 +1,6 @@
 # Scope
 
-**Current stage: Stage 0**
+**Current stage: Stage 2**
 
 Each stage ends with a go or no-go decision logged in DECISIONS.md.
 
@@ -41,4 +41,5 @@ Output: public repo and a LinkedIn-ready summary.
 - Overclaiming on prices. See decision D3.
 
 ## Done
-_Nothing yet._
+- Stage 0: GO for Stages 1 to 3 (D10). Stage 4 on hold (D8).
+- Stage 1: anchor figure and method in STAGE1_WASTE.md (D11).
