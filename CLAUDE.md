@@ -4,7 +4,7 @@
 Geospatial pipeline mapping battery opportunity and detecting rooftop solar in the Perth metro area (SWIS).
 
 ## Owner and working style
-- Jack writes the code himself to learn. Explain, review and suggest; do not dump large finished files unless asked.
+- Claude writes the code; Jack reviews it. Keep changes small and reviewable, and explain the non-obvious parts.
 - Python first. QGIS only for sanity checks and final map polish.
 - Keep the repo clean and readable. It will be public and linked from LinkedIn. Avoid vibe-coded sprawl.
 

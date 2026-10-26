@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perth Battery Opportunity</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root { --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --border: #e4e3df; }
+  html, body { margin: 0; height: 100%; background: var(--surface); color: var(--ink);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #map { position: absolute; inset: 0; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 12px; max-width: 280px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .panel h1 { font-size: 15px; margin: 0 0 4px; }
+  .panel p { margin: 0 0 8px; color: var(--ink-2); font-size: 12px; }
+  .legend-row { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 2px 0; }
+  .swatch { width: 18px; height: 12px; border-radius: 2px; }
+  .popup b { font-size: 13px; }
+  .popup table { border-collapse: collapse; margin-top: 4px; font-size: 12px; }
+  .popup td { padding: 1px 6px 1px 0; }
+  .popup td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const DATA = __DATA__;
+const BINS = __BINS__;  // upper edges of score bins, low to high
+const COLORS = ["#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"];
+const fmt = (v, d = 0) => v == null ? "n/a" : Number(v).toFixed(d);
+
+const colorFor = s => s == null ? "#e4e3df" : COLORS[BINS.findIndex(edge => s <= edge)];
+
+const map = L.map("map", { zoomSnap: 0.5 });
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 18,
+}).addTo(map);
+
+const layer = L.geoJSON(DATA, {
+  style: f => ({ fillColor: colorFor(f.properties.score), fillOpacity: 0.8,
+                 color: "#fcfcfb", weight: 1 }),
+  onEachFeature: (f, l) => {
+    const p = f.properties;
+    const head = p.rank == null
+      ? "Not scored (fewer than 200 houses)"
+      : `Rank ${p.rank} of __N__ &middot; score ${fmt(p.score, 2)}`;
+    l.bindPopup(`<div class="popup"><b>${p.suburbs ?? ""} (${p.postcode})</b><br>${head}
+      <table>
+        <tr><td>Solar systems per 100 houses</td><td>${fmt(p.solar_per_100_houses)}</td></tr>
+        <tr><td>Batteries since Jul 2025 per 100 solar</td><td>${fmt(p.battery_per_100_solar, 1)}</td></tr>
+        <tr><td>Substation spare capacity (2028)</td><td>${p.headroom ?? "n/a"}</td></tr>
+        ${p.nss_site ? `<tr><td>Western Power support site</td><td>${p.nss_site}</td></tr>` : ""}
+      </table></div>`);
+    l.on("mouseover", () => l.setStyle({ weight: 2.5, color: "#0b0b0b" }));
+    l.on("mouseout", () => layer.resetStyle(l));
+  },
+}).addTo(map);
+map.fitBounds(layer.getBounds());
+
+const info = L.control({ position: "topright" });
+info.onAdd = () => {
+  const div = L.DomUtil.create("div", "panel");
+  const labels = BINS.map((edge, i) => `${fmt(i ? BINS[i - 1] : 0, 2)} to ${fmt(edge, 2)}`);
+  div.innerHTML = `<h1>Battery opportunity, Greater Perth</h1>
+    <p>Equal-weight score from solar per house, battery gap and substation headroom. Click a postcode for detail.</p>
+    ${COLORS.map((c, i) => `<div class="legend-row"><span class="swatch" style="background:${c}"></span>${labels[i]}</div>`).reverse().join("")}
+    <div class="legend-row"><span class="swatch" style="background:#e4e3df"></span>Not scored</div>
+    <p style="margin-top:8px">Data: Clean Energy Regulator (to 30 Sep 2026), ABS 2021, Western Power.
+    <a href="https://github.com/JackW1411/perth-solar-grid">Method and limitations</a></p>`;
+  L.DomEvent.disableClickPropagation(div);
+  return div;
+};
+info.addTo(map);
+</script>
+</body>
+</html>
