@@ -1,6 +1,6 @@
 # Scope
 
-**Current stage: Stage 3**
+**Current stage: Stage 6** (Stages 4 and 5 on hold, D8)
 
 Each stage ends with a go or no-go decision logged in DECISIONS.md.
 
@@ -44,3 +44,4 @@ Output: public repo and a LinkedIn-ready summary.
 - Stage 0: GO for Stages 1 to 3 (D10). Stage 4 on hold (D8).
 - Stage 1: anchor figure and method in STAGE1_WASTE.md (D11).
 - Stage 2: joined Perth postcode layer and first choropleth, `src/build_baseline.py` (D12, D13). Checked in QGIS.
+- Stage 3: opportunity score, sensitivity check and iNOM validation in STAGE3_SCORE.md (D14).
